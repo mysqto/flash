@@ -2,10 +2,6 @@
 
 # Flash
 
-<p align="center">
-<img src="https://cloud.githubusercontent.com/assets/8317250/7787558/fb091794-024d-11e5-815b-cf3b6b2e5217.png">
-</p>
-
 [slack-link]: https://fisherman-wharf.herokuapp.com/
 [slack-badge]: https://fisherman-wharf.herokuapp.com/badge.svg
 
