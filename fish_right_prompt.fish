@@ -11,6 +11,10 @@ function flash_git_is_touched
   test -n (echo (command git status --porcelain))
 end
 
+function flash_is_pwd_git_repo
+  test -d .git; or git rev-parse --git-dir > /dev/null ^&1
+end
+
 function fish_right_prompt
   set -l code $status
 
@@ -22,7 +26,7 @@ function fish_right_prompt
     printf (flash_dim)" ~"(printf "%.1fs " (math "$CMD_DURATION / 1000"))(flash_off)
   end
 
-  if test -d .git
+  if flash_is_pwd_git_repo
     if flash_git_is_stashed
       echo (flash_dim)"<"(flash_off)
     end
