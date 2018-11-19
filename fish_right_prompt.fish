@@ -19,7 +19,7 @@ function flash_is_pwd_git_repo
   test -d .git; or git rev-parse --git-dir > /dev/null ^&1
 end
 
-function git_unstaged
+function git_untracked
   command git status -s | awk '{if ($1 == "??") print $2}' | wc -l | tr -d '[:space:]'
 end
 
@@ -55,7 +55,7 @@ function git_ahead_behind
 end
 
 function git_status
-command echo \[(git_ahead_behind)\|\*(git_modified)\|\+(git_added)\|\-(git_deleted)\]
+command echo \[(git_ahead_behind)\|\*(git_modified)\|\+(git_added)\|\-(git_deleted)\?(git_untracked)\]
 end
 
 function fish_right_prompt
