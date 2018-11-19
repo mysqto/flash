@@ -55,7 +55,7 @@ function git_ahead_behind
 end
 
 function git_status
-command echo \[(git_ahead_behind)\|\*(git_modified)\|\+(git_added)\|\-(git_deleted)\?(git_untracked)\]
+command echo \[(git_ahead_behind)\|\*(git_modified)\|\+(git_added)\|\-(git_deleted)\|\?(git_untracked)\]
 end
 
 function fish_right_prompt
