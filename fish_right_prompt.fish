@@ -76,7 +76,7 @@ function fish_right_prompt
     printf (begin
       flash_git_is_touched
         and echo (flash_fst)"(*"(flash_snd)(flash_git_branch_name)(git_status)(flash_fst)")"(flash_off)
-        or echo (flash_snd)"("(flash_fst)(flash_git_branch_name)(flash_snd)")"(flash_off)
+        or echo (flash_snd)"("(flash_fst)(flash_git_branch_name)\[(git_ahead_behind)\](flash_snd)")"(flash_off)
     end)(flash_off)
   end
 
