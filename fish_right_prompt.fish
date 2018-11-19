@@ -15,6 +15,30 @@ function flash_is_pwd_git_repo
   test -d .git; or git rev-parse --git-dir > /dev/null ^&1
 end
 
+function git_modified
+  command git status --porcelain | grep "^M" | wc -l
+end
+
+function  git_added
+  command git status --porcelain | grep "^A" | wc -l
+end
+
+function  git_deleted
+  command git status --porcelain | grep "^D" | wc -l
+end
+
+function  git_renamed
+  command git status --porcelain | grep "^R" | wc -l
+end
+
+function  git_copied
+  command git status --porcelain | grep "^C" | wc -l
+end
+
+function  git_updated_but_unmerged
+  command git status --porcelain | grep "^U" | wc -l
+end
+
 function fish_right_prompt
   set -l code $status
 
