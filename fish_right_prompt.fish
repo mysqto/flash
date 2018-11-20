@@ -47,8 +47,12 @@ function  git_updated_but_unmerged
   command git status -s | awk '{if ($1 == "U") print $2}' | wc -l | tr -d '[:space:]'
 end
 
+function flash_git_remote
+  command git remote -v | head -1 | awk '{print $1}'
+end
+
 function git_ahead_behind
-  set -l ahead_behind (git rev-list --count --left-right (flash_git_branch_name)...(flash_git_remote_branch_name))
+  set -l ahead_behind (git rev-list --count --left-right (flash_git_branch_name)...(flash_git_remote)/(flash_git_branch_name))
   set -l ahead (echo $ahead_behind | awk '{print $1}')
   set -l behind (echo $ahead_behind | awk '{print $2}')
   echo ↑$ahead↓$behind
