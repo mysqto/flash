@@ -25,6 +25,14 @@ function git_root
   end
 end
 
+function git_remote_url
+  command git ls-remote --get-url (git_remote)
+end
+
+function git_remote_branch_exist
+  ; and git_remote_branch_name > /dev/null 2>&1
+end
+
 function in_git_repo
   test -d .git; or git rev-parse --git-dir > /dev/null 2>&1
 end
@@ -62,9 +70,13 @@ function git_remote
 end
 
 function git_ahead_behind
-  set -l ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
-  set -l ahead (echo $ahead_behind | awk '{print $1}')
-  set -l behind (echo $ahead_behind | awk '{print $2}')
+  set -l ahead '?'
+  set -l behind '?'
+  if git_remote_branch_exist
+    set ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
+    set ahead (echo $ahead_behind | awk '{print $1}')
+    set behind (echo $ahead_behind | awk '{print $2}')
+  end
   echo ↑$ahead↓$behind
 end
 
