@@ -1,6 +1,6 @@
 
 function flash_git_is_stashed
-  command git rev-parse --verify --quiet refs/stash >/dev/null
+  command git rev-parse --verify --quiet refs/stash >/dev/null 2>&1
 end
 
 function flash_git_branch_name
@@ -12,47 +12,58 @@ function flash_git_remote_branch_name
 end
 
 function flash_git_is_touched
-  test -n (echo (command git status --porcelain))
+  
+  test -n (echo (env GIT_WORK_TREE=(git_root) command git status --porcelain)) > /dev/null 2>&1
 end
 
-function flash_is_pwd_git_repo
-  test -d .git; or git rev-parse --git-dir > /dev/null ^&1
+function git_root
+  set -l pwd (realpath .)
+  switch $pwd
+    case "*/.git*"
+      echo (string replace -r "/.git*" "" -- $pwd)[1]
+    case "*"
+      in_git_repo; and command git rev-parse --show-toplevel
+  end
+end
+
+function in_git_repo
+  test -d .git; or git rev-parse --git-dir > /dev/null 2>&1
 end
 
 function git_untracked
-  command git status -s | awk '{if ($1 == "??") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "??") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function git_modified
-  command git status -s | awk '{if ($1 == "M") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "M") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function  git_added
-  command git status -s | awk '{if ($1 == "A") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "A") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function  git_deleted
-  command git status -s | awk '{if ($1 == "D") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "D") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function  git_renamed
-  command git status -s | awk '{if ($1 == "R") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "R") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function  git_copied
-  command git status -s | awk '{if ($1 == "C") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "C") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function  git_updated_but_unmerged
-  command git status -s | awk '{if ($1 == "U") print $2}' | wc -l | tr -d '[:space:]'
+  command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "U") print $2}' | wc -l | tr -d '[:space:]'
 end
 
 function flash_git_remote
-  command git remote -v | head -1 | awk '{print $1}'
+  command env GIT_WORK_TREE=(git_root) git remote -v | head -1 | awk '{print $1}'
 end
 
 function git_ahead_behind
-  set -l ahead_behind (git rev-list --count --left-right (flash_git_branch_name)...(flash_git_remote)/(flash_git_branch_name))
+  set -l ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (flash_git_branch_name)...(flash_git_remote)/(flash_git_branch_name))
   set -l ahead (echo $ahead_behind | awk '{print $1}')
   set -l behind (echo $ahead_behind | awk '{print $2}')
   echo ↑$ahead↓$behind
@@ -73,7 +84,7 @@ function fish_right_prompt
     printf (flash_dim)" ~"(printf "%.1fs " (math "$CMD_DURATION / 1000"))(flash_off)
   end
 
-  if flash_is_pwd_git_repo
+  if in_git_repo
     if flash_git_is_stashed
       echo (flash_dim)"<"(flash_off)
     end
