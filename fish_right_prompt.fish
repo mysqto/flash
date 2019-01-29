@@ -1,18 +1,17 @@
 
-function flash_git_is_stashed
+function git_is_stashed
   command git rev-parse --verify --quiet refs/stash >/dev/null 2>&1
 end
 
-function flash_git_branch_name
+function git_branch_name
   command git symbolic-ref --short HEAD
 end
 
-function flash_git_remote_branch_name
+function git_remote_branch_name
   command git rev-parse --abbrev-ref --symbolic-full-name @\{u\}
 end
 
-function flash_git_is_touched
-  
+function git_is_touched
   test -n (echo (env GIT_WORK_TREE=(git_root) command git status --porcelain)) > /dev/null 2>&1
 end
 
@@ -58,12 +57,12 @@ function  git_updated_but_unmerged
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "U") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function flash_git_remote
+function git_remote
   command env GIT_WORK_TREE=(git_root) git remote -v | head -1 | awk '{print $1}'
 end
 
 function git_ahead_behind
-  set -l ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (flash_git_branch_name)...(flash_git_remote)/(flash_git_branch_name))
+  set -l ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
   set -l ahead (echo $ahead_behind | awk '{print $1}')
   set -l behind (echo $ahead_behind | awk '{print $2}')
   echo ↑$ahead↓$behind
@@ -85,13 +84,13 @@ function fish_right_prompt
   end
 
   if in_git_repo
-    if flash_git_is_stashed
+    if git_is_stashed
       echo (flash_dim)"<"(flash_off)
     end
     printf (begin
-      flash_git_is_touched
-        and echo (flash_fst)"(*"(flash_snd)(flash_git_branch_name)(git_status)(flash_fst)")"(flash_off)
-        or echo (flash_snd)"("(flash_fst)(flash_git_branch_name)\[(git_ahead_behind)\](flash_snd)")"(flash_off)
+      git_is_touched
+        and echo (flash_fst)"(*"(flash_snd)(git_branch_name)(git_status)(flash_fst)")"(flash_off)
+        or echo (flash_snd)"("(flash_fst)(git_branch_name)\[(git_ahead_behind)\](flash_snd)")"(flash_off)
     end)(flash_off)
   end
 
