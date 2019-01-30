@@ -30,7 +30,7 @@ function git_remote_url
 end
 
 function git_remote_branch_exist
-  test -n (git_remote_branch_name)
+  test -n (echo (git_remote_branch_name)) > /dev/null 2>&1
 end
 
 function in_git_repo
