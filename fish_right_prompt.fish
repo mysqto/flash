@@ -73,7 +73,7 @@ function git_ahead_behind
   set -l ahead '?'
   set -l behind '?'
   if git_remote_branch_exist
-    set ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
+    set -l ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
     set ahead (echo $ahead_behind | awk '{print $1}')
     set behind (echo $ahead_behind | awk '{print $2}')
   end
