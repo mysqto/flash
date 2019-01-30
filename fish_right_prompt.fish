@@ -8,7 +8,7 @@ function git_branch_name
 end
 
 function git_remote_branch_name
-  command git rev-parse --abbrev-ref --symbolic-full-name @\{u\}
+  command git rev-parse --abbrev-ref --symbolic-full-name @\{u\} 2> /dev/null
 end
 
 function git_is_touched
@@ -30,7 +30,7 @@ function git_remote_url
 end
 
 function git_remote_branch_exist
-  ; and git_remote_branch_name > /dev/null 2>&1
+  test -n (git_remote_branch_name)
 end
 
 function in_git_repo
