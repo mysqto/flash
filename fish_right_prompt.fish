@@ -1,13 +1,13 @@
 
-function git_is_stashed
+function git_is_stashed -d "Whether current repo is stashed"
   command git rev-parse --verify --quiet refs/stash >/dev/null 2>&1
 end
 
-function git_branch_name
+function git_branch_name -d "Get current working branch name"
   command git symbolic-ref --short HEAD
 end
 
-function git_remote_branch_name
+function git_remote_branch_name -d "Get remote branch name"
   command git rev-parse --abbrev-ref --symbolic-full-name @\{u\} 2> /dev/null
 end
 
@@ -15,7 +15,7 @@ function git_is_touched
   test -n (echo (env GIT_WORK_TREE=(git_root) command git status --porcelain)) > /dev/null 2>&1
 end
 
-function git_root
+function git_root -d "Get root directory of git repo"
   set -l pwd (realpath .)
   switch $pwd
     case "*/.git*"
@@ -25,48 +25,48 @@ function git_root
   end
 end
 
-function git_remote_url
-  command git ls-remote --get-url (git_remote)
+function git_remote_url -d "Get url of active remote of current git repo"
+  in_git_repo; and git ls-remote --get-url (git_remote)
 end
 
-function git_remote_branch_exist
+function git_remote_branch_exist -d "Check whether remote branch exists"
   test -n (echo (git_remote_branch_name)) > /dev/null 2>&1
 end
 
-function in_git_repo
+function in_git_repo -d "Whether current directory in a git repo"
   test -d .git; or git rev-parse --git-dir > /dev/null 2>&1
 end
 
-function git_untracked
+function git_remote -d "Get remote of current repo"
+  command env GIT_WORK_TREE=(git_root) git remote -v | head -1 | awk '{print $1}'
+end
+
+function git_untracked -d "Get file count of untracked"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "??") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function git_modified
+function git_modified -d "Get file count of modified"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "M") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function  git_added
+function  git_added -d "Get file count of added"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "A") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function  git_deleted
+function  git_deleted -d "Get file count of deleted"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "D") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function  git_renamed
+function  git_renamed -d "Get file count of renamed"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "R") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function  git_copied
+function  git_copied -d "Get file count of copied"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "C") print $2}' | wc -l | tr -d '[:space:]'
 end
 
-function  git_updated_but_unmerged
+function  git_updated_but_unmerged -d "Get file count of updated but unmerged"
   command env GIT_WORK_TREE=(git_root) git status -s | awk '{if ($1 == "U") print $2}' | wc -l | tr -d '[:space:]'
-end
-
-function git_remote
-  command env GIT_WORK_TREE=(git_root) git remote -v | head -1 | awk '{print $1}'
 end
 
 function git_ahead_behind
