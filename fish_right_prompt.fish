@@ -22,7 +22,7 @@ function git_root -d "Get root directory of git repo"
 end
 
 function git_is_touched
-  test -n (echo (env GIT_WORK_TREE=(git_root) command git status --porcelain)) > /dev/null 2>&1
+  test -n (echo (env GIT_WORK_TREE=(git_root) git status --porcelain)) > /dev/null 2>&1
 end
 
 function git_remote_url -d "Get url of active remote of current git repo"
