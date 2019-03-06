@@ -11,10 +11,6 @@ function git_remote_branch_name -d "Get remote branch name"
   command git rev-parse --abbrev-ref --symbolic-full-name @\{u\} 2> /dev/null
 end
 
-function git_is_touched
-  test -n (echo (env GIT_WORK_TREE=(git_root) command git status --porcelain)) > /dev/null 2>&1
-end
-
 function git_root -d "Get root directory of git repo"
   set -l pwd (realpath .)
   switch $pwd
@@ -23,6 +19,10 @@ function git_root -d "Get root directory of git repo"
     case "*"
       in_git_repo; and command git rev-parse --show-toplevel
   end
+end
+
+function git_is_touched
+  test -n (echo (env GIT_WORK_TREE=(git_root) command git status --porcelain)) > /dev/null 2>&1
 end
 
 function git_remote_url -d "Get url of active remote of current git repo"

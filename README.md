@@ -5,7 +5,7 @@
 </p>
 
 ## Install
-`fisher add github.com/mysqto/flash`
+`fisher add mysqto/flash`
 
 ## Features
 
