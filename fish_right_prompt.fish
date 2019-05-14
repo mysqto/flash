@@ -106,7 +106,7 @@ function fish_right_prompt
     end)(flash_off)
   end
 
-  printf " "(flash_trd)(date +%H(status::color):(flash_dim)%M(status::color):(flash_trd)%S)(flash_snd)" "(flash_off)
+  printf " "(flash_trd)(date +%H(status::color):(flash_trd)%M(status::color):(flash_trd)%S)(flash_snd)" "(flash_off)
 
   if test $code -ne 0
     echo (flash_fst)"≡ "(flash_snd)"$code"(flash_off)
