@@ -92,7 +92,7 @@ function fish_right_prompt
   end
 
   if test $CMD_DURATION -gt 10
-    printf (flash_blu)" ~"(printf "%.1fs " (math "$CMD_DURATION / 1000"))(flash_off)
+    printf (flash_blu)" ~"(printf "%.1fs " (math -s3 "$CMD_DURATION / 1000"))(flash_off)
   end
 
   if in_git_repo
