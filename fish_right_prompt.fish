@@ -4,7 +4,7 @@ function git_is_stashed -d "Whether current repo is stashed"
 end
 
 function git_branch_name -d "Get current working branch name"
-  command git symbolic-ref --short HEAD
+  command git symbolic-ref --short HEAD  2> /dev/null; or git rev-parse --short HEAD 2> /dev/null
 end
 
 function git_remote_branch_name -d "Get remote branch name"
