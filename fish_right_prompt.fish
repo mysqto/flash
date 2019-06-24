@@ -21,6 +21,10 @@ function git_root -d "Get root directory of git repo"
   end
 end
 
+function in_git_submodule -d "check current directory is in a git submodule"
+  not test -z (command git rev-parse --show-superproject-working-tree  2> /dev/null)
+end
+
 function git_is_touched
   test -n (echo (env GIT_WORK_TREE=(git_root) git status --porcelain)) > /dev/null 2>&1
 end
