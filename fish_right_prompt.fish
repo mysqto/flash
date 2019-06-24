@@ -1,3 +1,8 @@
+function fish_add_path -d "add path to fish_user_paths"
+  for path in $argv
+    test -d "$path"; and  set -U fish_user_paths "$path" $fish_user_paths
+  end
+end
 
 function git_is_stashed -d "Whether current repo is stashed"
   command git rev-parse --verify --quiet refs/stash >/dev/null 2>&1
