@@ -31,7 +31,7 @@ function in_git_submodule -d "check current directory is in a git submodule"
 end
 
 function git_is_touched
-  test -n (echo (env GIT_WORK_TREE=(git_root) git status --porcelain)) > /dev/null 2>&1
+  test -n (env GIT_WORK_TREE=(git_root) git status --porcelain) > /dev/null 2>&1
 end
 
 function git_remote_url -d "Get url of active remote of current git repo"
@@ -82,7 +82,7 @@ function git_ahead_behind
   set -l ahead '?'
   set -l behind '?'
   if git_remote_branch_exist
-    set -l ahead_behind (env GIT_WORK_TREE=(git_root) git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
+    set -l ahead_behind (git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
     set ahead (echo $ahead_behind | awk '{print $1}')
     set behind (echo $ahead_behind | awk '{print $2}')
   end
@@ -90,7 +90,11 @@ function git_ahead_behind
 end
 
 function git_status
-  command echo \[(git_ahead_behind)\|\*(git_modified)\|\+(git_added)\|\-(git_deleted)\|↬(git_renamed)\|\?(git_untracked)\]
+  if git_is_touched
+    command echo \[(git_ahead_behind)\|\*(git_modified)\|\+(git_added)\|\-(git_deleted)\|↬(git_renamed)\|\?(git_untracked)\]
+  else
+    command echo \[(git_ahead_behind)\]
+  end
 end
 
 function fish_right_prompt
