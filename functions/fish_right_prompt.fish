@@ -39,7 +39,7 @@ function git_remote_url -d "Get url of active remote of current git repo"
 end
 
 function git_remote_branch_exist -d "Check whether remote branch exists"
-  test -n (echo (git_remote_branch_name)) > /dev/null 2>&1
+  test -n (git_remote_branch_name) > /dev/null 2>&1
 end
 
 function in_git_repo -d "Whether current directory in a git repo"
@@ -82,9 +82,11 @@ function git_ahead_behind
   set -l ahead '?'
   set -l behind '?'
   if git_remote_branch_exist
-    set -l ahead_behind (git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name))
-    set ahead (echo $ahead_behind | awk '{print $1}')
-    set behind (echo $ahead_behind | awk '{print $2}')
+    set -l ahead_behind (git rev-list --count --left-right (git_branch_name)...(git_remote)/(git_branch_name) 2> /dev/null)
+    if test -n "$ahead_behind"
+      set ahead (echo $ahead_behind | awk '{print $1}')
+      set behind (echo $ahead_behind | awk '{print $2}')
+    end
   end
   echo ↑$ahead↓$behind
 end
