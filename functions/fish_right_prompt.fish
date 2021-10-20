@@ -19,8 +19,10 @@ end
 function git_root -d "Get root directory of git repo"
   set -l pwd (realpath .)
   switch $pwd
-    case "*/.git*"
-      echo (string replace -r "/.git*" "" -- $pwd)[1]
+    case "*/.git"
+      echo $pwd
+    case "*/.git/*"
+      echo (string replace -r "/.git/.*" "" -- $pwd)[1]
     case "*"
       in_git_repo; and command git rev-parse --show-toplevel
   end
